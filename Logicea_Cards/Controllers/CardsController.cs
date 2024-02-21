@@ -18,7 +18,7 @@ namespace Logicea_Cards.Controllers
         {
             return await _cards.ReadAllAsync();
         }
-        [HttpGet("{code}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
             if (string.IsNullOrEmpty(id))
