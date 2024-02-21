@@ -8,5 +8,14 @@ namespace Logicea_Cards.Models
         {
 
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Card>()
+                .HasKey(c => new { c.Id });
+            modelBuilder.Entity<User>()
+                .HasKey(c => new { c.Email });
+        }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Card> Cards { get; set; }
     }
 }
