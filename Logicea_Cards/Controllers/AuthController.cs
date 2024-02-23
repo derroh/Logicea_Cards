@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace Logicea_Cards.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {

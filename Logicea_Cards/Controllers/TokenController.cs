@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Logicea_Cards.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/token")]
     [ApiController]
     public class TokenController : ControllerBase
     {
@@ -29,7 +29,7 @@ namespace Logicea_Cards.Controllers
             string refreshToken = tokenApiModel.RefreshToken;
 
             var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
-            var username = principal.Identity.Name; //this is mapped to the Name claim by default
+            var username = principal.Identity.Name; 
 
             var user = _cardsDbContext.Users.SingleOrDefault(u => u.Email == username);
 

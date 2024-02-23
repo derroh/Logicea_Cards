@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Logicea_Cards.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/cards")]
     [Authorize]
     public class CardsController : Controller
     {
