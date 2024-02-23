@@ -1,11 +1,13 @@
 ﻿using Logicea_Cards.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Logicea_Cards.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Logicea_Cards.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class CardsController : Controller
     {
         IRepository<Card> _cards;
