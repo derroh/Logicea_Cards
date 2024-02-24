@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Logicea_Cards.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Logicea_Cards.Controllers
 {
@@ -18,6 +20,12 @@ namespace Logicea_Cards.Controllers
         [HttpGet]
         public async Task<IEnumerable<Card>> Get()
         {
+            string role = User.FindFirstValue(ClaimTypes.Role);
+            string name = User.FindFirstValue(ClaimTypes.Name);
+
+            if (role == "Member")
+                return await _cards.ReadAllAsync(x => x.UserEmail == name);
+
             return await _cards.ReadAllAsync();
         }
         [HttpGet("{id}")]
@@ -29,11 +37,24 @@ namespace Logicea_Cards.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> Post(Card card)
+        public async Task<IActionResult> Post(DTOs.CardDTO card)
         {
             if (card == null)
+            {
                 return BadRequest();
-            await _cards.CreateAsync(card);
+            }
+
+            string name = User.FindFirstValue(ClaimTypes.Name);
+
+            var _card = new Logicea_Cards.Models.Card
+            {
+                Name = card.Name,
+                Color = card.Color,
+                Description = card.Description,
+                UserEmail = name,                
+            };
+
+            await _cards.CreateAsync(_card);
             return Ok();
         }
         [HttpPut]

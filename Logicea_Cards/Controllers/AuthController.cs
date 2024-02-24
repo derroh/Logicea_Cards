@@ -19,7 +19,7 @@ namespace Logicea_Cards.Controllers
         }
 
         [HttpPost, Route("login")]
-        public IActionResult Login([FromBody] LoginModel loginModel)
+        public IActionResult Login([FromBody] DTOs.LoginDTO loginModel)
         {
             if (loginModel is null)
             {
