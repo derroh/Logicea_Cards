@@ -1,4 +1,6 @@
-﻿namespace Logicea_Cards.Models
+﻿using Logicea_Cards.Validation;
+
+namespace Logicea_Cards.Models
 {
     public class QueryParameters
     {
@@ -10,5 +12,12 @@
             get { return pageSize; }
             set { pageSize = (value > maxPageSize) ? maxPageSize : value; }
         }
+        public string Name { get; set; }
+      
+        public string Color { get; set; } // Ensure format validation
+      
+        public string Status { get; set; }
+
+        public string DateOfCreation { get; set; }
     }
 }
