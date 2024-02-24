@@ -25,9 +25,9 @@ namespace Logicea_Cards.Entity
         {
             return await _context.Set<T>().ToListAsync();
         }
-        public async Task<(List<T>, int)> ReadAllFilterAsync(int skip, int take)
+        public async Task<(List<T>, int)> ReadAllFilterAsync(Expression<Func<T, bool>> filter, int skip, int take)
         {
-            var all = _context.Set<T>();
+            var all = _context.Set<T>().Where(filter);
             var relevant = await all.Skip(skip).Take(take).ToListAsync();
             var total = all.Count();
 
@@ -35,12 +35,14 @@ namespace Logicea_Cards.Entity
 
             return result;
         }
-        public async Task UpdateAsync(T entity)
+        public async Task UpdateAsync(T entity, Expression<Func<T, bool>> filter)
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            var entitySearch = await _context.Set<T>().Where(filter).FirstOrDefaultAsync();
 
+            if (entitySearch == null)
+                throw new EntityNotFoundException("Record not found.");
             _context.Update(entity);
+
             await _context.SaveChangesAsync();
         }
         public async Task<T> ReadAsync(int id)

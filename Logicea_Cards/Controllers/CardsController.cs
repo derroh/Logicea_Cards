@@ -4,6 +4,9 @@ using Logicea_Cards.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.EntityFrameworkCore;
+using System.Drawing;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Logicea_Cards.Controllers
 {
@@ -41,21 +44,7 @@ namespace Logicea_Cards.Controllers
                 Ok(await _cards.ReadAllAsync(x => x.Id == Convert.ToInt32(id)));
             return Ok(await _cards.ReadAllAsync(x => x.Id == Convert.ToInt32(id) && x.UserEmail == name));
 
-        }
-        //[HttpGet]
-        //public async Task<IActionResult> Search([FromQuery] QueryParameters parameters)
-        //{
-        //    if (parameters == null)
-        //        return BadRequest();
-
-        //    string role = User.FindFirstValue(ClaimTypes.Role);
-        //    string name = User.FindFirstValue(ClaimTypes.Name);
-
-        //    //if (role == "Admin")
-        //    //    Ok(await _cards.ReadAllAsync(x => x.Id == Convert.ToInt32(id)));
-        //    return Ok(await _cards.ReadAllFilterAsync((parameters.PageNumber - 1) * parameters.PageSize, parameters.PageSize));
-
-        //}
+        }       
         [HttpPost]
         public async Task<IActionResult> Post(DTOs.CardDTO card)
         {
@@ -78,11 +67,26 @@ namespace Logicea_Cards.Controllers
             return Ok();
         }
         [HttpPut]
-        public async Task<IActionResult> Put(Card card)
+        public async Task<IActionResult> Put(DTOs.CardDTO card)
         {
+
+            string name = User.FindFirstValue(ClaimTypes.Name);
+
             if (card == null)
                 return BadRequest();
-            await _cards.UpdateAsync(card);
+
+            var _card = new Models.Card
+            {
+                Id = card.Id,
+                Name = card.Name,
+                Color = card.Color,
+                Description = card.Description,
+                Status = card.Status,
+                UserEmail = name
+            };
+
+            await _cards.UpdateAsync(_card, x =>x.UserEmail == name);
+
             return Ok();
         }
         [HttpDelete("{id}")]
@@ -99,6 +103,19 @@ namespace Logicea_Cards.Controllers
             await _cards.DeleteAsync(x => x.Id == Convert.ToInt32(id) && x.UserEmail == name);
 
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("search")]
+        public async Task<IActionResult> Search([FromQuery] QueryParameters parameters)
+        {
+            if (parameters == null)
+                return BadRequest();
+
+            string name = User.FindFirstValue(ClaimTypes.Name);
+
+            return Ok(await _cards.ReadAllFilterAsync(x =>x.UserEmail == name && ( x.Name.Contains(parameters.Name) || x.Color == parameters.Color || x.Status == parameters.Status || x.CreationDate.Date == Convert.ToDateTime(parameters.DateOfCreation)), (parameters.PageNumber - 1) * parameters.PageSize, parameters.PageSize));
+
         }
     }
 }

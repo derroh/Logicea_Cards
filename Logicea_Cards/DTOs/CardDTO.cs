@@ -5,6 +5,7 @@ namespace Logicea_Cards.DTOs
 {
     public class CardDTO
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "The field name is required.")]
         public string Name { get; set; }
         public string Description { get; set; }
