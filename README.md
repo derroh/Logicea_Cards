@@ -37,7 +37,7 @@ To run this application locally, follow these steps:
 
 - `POST /api/auth/login`: User login endpoint.
 - `POST /api/cards`: Create a new card.
-- `GET /api/cards`: Get all cards with optional filters, pagination, and sorting.
+- `GET /api/cards/search`: Get all cards with optional filters, pagination, and sorting.
 - `GET /api/cards/{id}`: Get a single card by ID.
 - `PUT /api/cards/{id}`: Update a card by ID.
 - `DELETE /api/cards/{id}`: Delete a card by ID.
