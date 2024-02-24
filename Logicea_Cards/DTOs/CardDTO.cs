@@ -10,6 +10,7 @@ namespace Logicea_Cards.DTOs
         public string Description { get; set; }
         [AlphanumericColorCode]
         public string Color { get; set; } // Ensure format validation
+        [OptionsList("To Do", "In Progress", "Done")]
         public string Status { get; set; } = "To Do"; // Default status
     }
 }
