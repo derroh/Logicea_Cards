@@ -33,7 +33,13 @@ namespace Logicea_Cards.Controllers
         {
             if (string.IsNullOrEmpty(id))
                 return BadRequest();
-            return Ok(await _cards.ReadAllAsync(x => x.Id == Convert.ToInt32(id)));
+
+            string role = User.FindFirstValue(ClaimTypes.Role);
+            string name = User.FindFirstValue(ClaimTypes.Name);
+
+            if (role == "Admin")
+                Ok(await _cards.ReadAllAsync(x => x.Id == Convert.ToInt32(id)));
+            return Ok(await _cards.ReadAllAsync(x => x.Id == Convert.ToInt32(id) && x.UserEmail == name));
 
         }
         [HttpPost]
@@ -70,7 +76,14 @@ namespace Logicea_Cards.Controllers
         {
             if (string.IsNullOrEmpty(id))
                 return BadRequest();
-            await _cards.DeleteAsync(x => x.Id == Convert.ToInt32(id));
+
+            string role = User.FindFirstValue(ClaimTypes.Role);
+            string name = User.FindFirstValue(ClaimTypes.Name);
+
+            if (role == "Admin")
+                await _cards.DeleteAsync(x => x.Id == Convert.ToInt32(id));
+            await _cards.DeleteAsync(x => x.Id == Convert.ToInt32(id) && x.UserEmail == name);
+
             return Ok();
         }
     }

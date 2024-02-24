@@ -1,4 +1,5 @@
-﻿using Logicea_Cards.Models;
+﻿using Logicea_Cards.Exceptions;
+using Logicea_Cards.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -50,7 +51,7 @@ namespace Logicea_Cards.Entity
         {
             var entity = await _context.Set<T>().Where(filter).FirstOrDefaultAsync();
             if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+                throw new EntityNotFoundException("Record not found.");
 
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
